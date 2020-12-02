@@ -1,0 +1,8 @@
+[package]
+name = "advent_of_code_2018"
+version = "1.0.0"
+authors = ["Bohui Moon <github.com/bohuim"]
+
+[[bin]]
+name = "day04"
+path = "day04.rs"
