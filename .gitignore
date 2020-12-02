@@ -1,0 +1,6 @@
+# Rust
+Cargo.lock
+
+# AdventOfCode
+*/input
+*/target
