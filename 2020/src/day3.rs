@@ -6,6 +6,11 @@ pub struct Road {
   value: Grid,
 }
 
+pub struct Slope {
+  right: usize,
+  down: usize,
+}
+
 //#mark - Solution
 
 #[aoc_generator(day3)]
@@ -26,13 +31,37 @@ pub fn parse(input: &str) -> Road {
 
 #[aoc(day3, part1)]
 pub fn solve1(road: &Road) -> usize {
-  // For each row, if there's a tree at position, increment the hit count.
-  // Add right over 3 positions, wrapping around on width overflow.
+  calculate_hits(road, &Slope { right: 3, down: 1})
+}
+
+#[aoc(day3, part2)]
+pub fn solve2(road: &Road) -> usize {
+  let slopes = vec![
+    Slope { right: 1, down: 1 },
+    Slope { right: 3, down: 1 },
+    Slope { right: 5, down: 1 },
+    Slope { right: 7, down: 1 },
+    Slope { right: 1, down: 2 },
+  ];
+  slopes.iter()
+    .map(|slope| calculate_hits(road, slope))
+    .product()
+}
+
+//#mark - Helpers
+
+/// Calculates the number of trees hit on `road` when going at `slope`.
+/// 
+/// Starting at the top left, increment hit count if there's a tree at the current position, 
+/// then go down-right by the slope, wrapping around to the left on road width overflow.
+fn calculate_hits(road: &Road, slope: &Slope) -> usize {
   let mut hit: usize = 0;
+  let mut row: usize = 0;
   let mut pos: usize = 0;
-  for row in &road.value {
-    if row.contains(&pos) { hit += 1; }
-    pos = (pos + 3) % road.width
+  while row < road.value.len() {
+    if road.value[row].contains(&pos) { hit += 1 }
+    pos = (pos + slope.right) % road.width;
+    row += slope.down;
   }
   hit
 }
