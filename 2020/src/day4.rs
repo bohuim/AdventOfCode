@@ -2,6 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 use std::collections::HashMap;
 
+// All field types as static slices.
 static BYR: &str = "byr";
 static IYR: &str = "iyr";
 static EYR: &str = "eyr";
@@ -9,38 +10,13 @@ static HGT: &str = "hgt";
 static HCL: &str = "hcl";
 static ECL: &str = "ecl";
 static PID: &str = "pid";
+
+// Regex matchers for fields.
 lazy_static! {
   static ref RE_HGT: Regex = Regex::new(r"^(\d{2,3})(cm|in)$").unwrap();
   static ref RE_HCL: Regex = Regex::new(r"^#[a-f0-9]{6}$").unwrap();
   static ref RE_ECL: Regex = Regex::new(r"^(amb|blu|brn|gry|grn|hzl|oth)$").unwrap();
   static ref RE_PID: Regex = Regex::new(r"^\d{9}$").unwrap();
-}
-
-/// All possible `Passport` fields.
-pub enum Field {
-  BirthYear,
-  IssueYear,
-  ExpirationYear,
-  Height,
-  HairColor,
-  EyeColor,
-  PassportID,
-  CounntryID,
-}
-impl Field {
-  /// Static string slice representation of this `Field` enum case.
-  fn str(&self) -> &'static str {
-    match self {
-      Field::BirthYear => "byr",
-      Field::IssueYear => "iyr",
-      Field::ExpirationYear => "eyr",
-      Field::Height => "hgt",
-      Field::HairColor => "hcl",
-      Field::EyeColor => "ecl",
-      Field::PassportID => "pid",
-      Field::CounntryID => "cid",
-    }
-  } 
 }
 
 /// Represents a passport entry as a hash map of `String -> String`.
@@ -63,18 +39,18 @@ impl Passport {
 
   /// Checks whether self has all fields except `Field::CountryID`.
   fn validate1(&self) -> bool {
-    self.field.get(Field::BirthYear.str()).is_some()
-    && self.field.get(Field::IssueYear.str()).is_some()
-    && self.field.get(Field::ExpirationYear.str()).is_some()
-    && self.field.get(Field::Height.str()).is_some()
-    && self.field.get(Field::HairColor.str()).is_some()
-    && self.field.get(Field::EyeColor.str()).is_some()
-    && self.field.get(Field::PassportID.str()).is_some()
+       self.field.get(BYR).is_some()
+    && self.field.get(IYR).is_some()
+    && self.field.get(EYR).is_some()
+    && self.field.get(HGT).is_some()
+    && self.field.get(HCL).is_some()
+    && self.field.get(ECL).is_some()
+    && self.field.get(PID).is_some()
   }
 
   /// Check whether self has valid values in all fields except `Field::CountryID`.
   fn validate2(&self) -> bool {
-    self.check_byr()
+       self.check_byr()
     && self.check_iyr()
     && self.check_eyr()
     && self.check_hgt()
