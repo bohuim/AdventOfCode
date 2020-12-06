@@ -1,6 +1,9 @@
 use core::ops::Range;
 
-#[derive(PartialEq, Eq, Debug)]
+// const NUM_ROWS: usize = 128;
+// const NUM_COLS: usize = 8;
+
+#[derive(Clone, PartialEq, Eq, Debug)]
 pub struct Seat {
   row: usize,
   col: usize,
@@ -41,6 +44,19 @@ pub fn parse(input: &str) -> Vec<Seat> {
 #[aoc(day5, part1)]
 pub fn solve1(seats: &Vec<Seat>) -> usize {
   seats.iter().map(|seat| seat.sid).max().unwrap_or(0)
+}
+
+#[aoc(day5, part2)]
+pub fn solve2(seats: &Vec<Seat>) -> usize {
+  let mut seats = seats.to_owned();
+  seats.sort_by(|a, b| a.sid.cmp(&b.sid));
+  for i in 0 .. seats.len() - 1 {
+    let (a, b) = (&seats[i], &seats[i + 1]);
+    if a.sid + 1 != b.sid {
+      return a.sid + 1;
+    }
+  }
+  0
 }
 
 #[cfg(test)]
